@@ -1,5 +1,8 @@
-using EasyPkg
-using Base.Test
+# This file is a part of EasyPkg, licensed under the MIT License (MIT).
 
-# write your own tests here
-@test 1 == 1
+import EasyPkg
+import FactCheck
+
+EasyPkg.run_all_tests()
+
+FactCheck.exitstatus()
