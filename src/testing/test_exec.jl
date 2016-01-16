@@ -33,7 +33,7 @@ The test source files themselves should look like this:
 
 ```julia
 import EasyPkg
-@EasyPkg.using_BaseTestNext
+@EasyPkg.using_BaseTest
 
 @testset "Some tests" begin
     @test ...
