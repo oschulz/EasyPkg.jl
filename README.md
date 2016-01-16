@@ -35,10 +35,30 @@ subdirectory (e.g using `EasyPkg.include_sources` again).
 Package Tests
 -------------
 
-Use `EasyPkg.run_all_tests()` reduces the average Julia project's
+Use `EasyPkg.run_all_tests()` to reduce the average Julia project's
 "runtests.jl" to
 
 ```julia
 import EasyPkg
 EasyPkg.run_all_tests()
 ```
+
+It will automatically find and include all your test source files (may
+reside in nested directories). They should look like this:
+
+```julia
+import EasyPkg
+@EasyPkg.using_BaseTest
+
+@testset "Some tests" begin
+    @test ...
+    @test ...
+    ...
+end
+
+@testset "Some more tests" ...
+```
+
+The `@EasyPkg.using_BaseTest` macro allows you to easily use the new Julia
+v0.5 `Base.Test`, it automatically falls back to `BaseTestNext` for Julia
+v0.4.
