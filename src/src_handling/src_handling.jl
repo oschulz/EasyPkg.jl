@@ -1,4 +1,6 @@
 # This file is a part of EasyPkg, licensed under the MIT License (MIT).
 
-include_sources("base_test.jl")
-include_sources("test_exec.jl")
+include_sources(
+    "find_sources.jl",
+    "include_all_sources.jl",
+)

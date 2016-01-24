@@ -1,9 +1,11 @@
 # This file is a part of EasyPkg, licensed under the MIT License (MIT).
 
-function include_base_path()
-    const from_repl = isa(Base.source_path(), Void)
-    from_repl ? pwd() : dirname(Base.source_path())
-end
+
+called_from_repl() = isa(Base.source_path(), Void)
+
+include_base_path() = called_from_repl() ? pwd() : dirname(Base.source_path())
+
+current_src_file() = called_from_repl() ? "" : Base.source_path()
 
 
 export include_sources
@@ -16,7 +18,7 @@ to the path of the calling source file (or the current directory, when run
 directly from the REPL).
 
 Names may be ".jl" files or directories. For directories (e.g. "foo"),
-`include_sources` will include the julia source file with the same name inside
+`include_sources` will include the Julia source file with the same name inside
 that directory (e.g. "foo/foo.jl").
 """
 

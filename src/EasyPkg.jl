@@ -7,7 +7,9 @@ module EasyPkg
 include("include_helpers.jl")
 
 EasyPkg.include_sources(
-    "testing",
+    "src_handling",
 )
+
+EasyPkg.include_all_sources("testing")
 
 end # module
