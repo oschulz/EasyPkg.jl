@@ -2,7 +2,7 @@ EasyPkg
 -------
 
 [![Build Status](https://travis-ci.org/oschulz/EasyPkg.jl.svg?branch=master)](https://travis-ci.org/oschulz/EasyPkg.jl)
-[![Build status](https://ci.appveyor.com/api/projects/status/gc84nlrar6l0a3d8?svg=true)](https://ci.appveyor.com/project/oschulz/easypkg-jl)
+[![Build status](https://ci.appveyor.com/api/projects/status/gc84nlrar6l0a3d8/branch/master?svg=true)](https://ci.appveyor.com/project/oschulz/easypkg-jl/branch/master)
 
 A Julia package to simplify package development. EasyPkg aims to reduce the
 boilerplate code typically found in a Julia project's "src/<PrjName>.jl" and
