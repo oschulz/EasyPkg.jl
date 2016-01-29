@@ -17,8 +17,6 @@ function find_sources(
     basedir::AbstractString = pwd();
     recursive::Bool = true, exclude_self::Bool = true
 )
-    info("pwd = $(pwd())")
-    info("basedir = $basedir")
     const current_src = current_src_file()
 
     function impl(subdir::AbstractString)
