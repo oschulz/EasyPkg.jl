@@ -3,9 +3,23 @@
 if VERSION >= v"0.5-"
     using Base.Test
     typealias Base_TestSetException Base.Test.TestSetException
+    nothing
 else
     using BaseTestNext
     typealias Base_TestSetException BaseTestNext.TestSetException
+    nothing
+end
+
+# BaseTestNext.TestSetException doesn't have a field "broken", so simulate it:
+if VERSION >= v"0.5-"
+    _testsetexception() = Base_TestSetException(0, 0, 0, 0)
+    _nbroken(tse::Base_TestSetException) = tse.broken
+    _nbroken!(tse::Base_TestSetException, n) = tse.broken = n
+    nothing
+else
+    _testsetexception() = Base_TestSetException(0, 0, 0)
+    _nbroken(tse::Base_TestSetException) = 0
+    _nbroken!(tse::Base_TestSetException, n) = n
     nothing
 end
 
@@ -58,7 +72,7 @@ function run_all_tests(basedir::AbstractString = include_base_path())
     const abs_basedir = isabspath(basedir) ? basedir : joinpath(include_base_path(), basedir)
     const tests = find_sources(abs_basedir)
 
-    const combined_tse = Base_TestSetException(0, 0, 0)
+    const combined_tse = _testsetexception()
 
     for fname in tests
         const absfname = joinpath(abs_basedir, fname)
@@ -77,6 +91,7 @@ function run_all_tests(basedir::AbstractString = include_base_path())
                 combined_tse.pass += err.pass
                 combined_tse.fail += err.fail
                 combined_tse.error += err.error
+                _nbroken!(combined_tse, _nbroken(err))
             else
                 throw(err)
             end
@@ -84,7 +99,7 @@ function run_all_tests(basedir::AbstractString = include_base_path())
     end
 
     if (combined_tse.fail == 0) && (combined_tse.error == 0)
-        info("All tests ($(combined_tse.pass) in total) passed.")
+        info("All tests ($(combined_tse.pass) in total) passed ($(_nbroken(combined_tse)) broken).")
     else
         throw(combined_tse)
     end
