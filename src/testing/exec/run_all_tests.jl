@@ -1,28 +1,6 @@
 # This file is a part of EasyPkg, licensed under the MIT License (MIT).
 
-if VERSION >= v"0.5-"
-    using Base.Test
-    typealias Base_TestSetException Base.Test.TestSetException
-    nothing
-else
-    using BaseTestNext
-    typealias Base_TestSetException BaseTestNext.TestSetException
-    nothing
-end
-
-# BaseTestNext.TestSetException doesn't have a field "broken", so simulate it:
-if VERSION >= v"0.5-"
-    _testsetexception() = Base_TestSetException(0, 0, 0, 0)
-    _nbroken(tse::Base_TestSetException) = tse.broken
-    _nbroken!(tse::Base_TestSetException, n) = tse.broken = n
-    nothing
-else
-    _testsetexception() = Base_TestSetException(0, 0, 0)
-    _nbroken(tse::Base_TestSetException) = 0
-    _nbroken!(tse::Base_TestSetException, n) = n
-    nothing
-end
-
+using Base.Test
 
 export run_all_tests
 
@@ -45,14 +23,11 @@ import EasyPkg
 EasyPkg.run_all_tests()
 ```
 
-`run_all_tests()` uses `Base.Test` (for Julia >= v0.5), resp. `BaseTestNext`
-(for backward compatibility).
-
-The test source files themselves should look like this:
+`run_all_tests()` uses `Base.Test`. The test source files themselves should
+look like this:
 
 ```julia
-import EasyPkg
-@EasyPkg.using_BaseTest
+using Base.Test
 
 @testset "Some tests" begin
     @test ...
@@ -72,7 +47,7 @@ function run_all_tests(basedir::AbstractString = include_base_path())
     const abs_basedir = isabspath(basedir) ? basedir : joinpath(include_base_path(), basedir)
     const tests = find_sources(abs_basedir)
 
-    const combined_tse = _testsetexception()
+    const combined_tse = Base.Test.TestSetException(0, 0, 0, 0)
 
     for fname in tests
         const absfname = joinpath(abs_basedir, fname)
@@ -87,11 +62,11 @@ function run_all_tests(basedir::AbstractString = include_base_path())
             end
             combined_tse.pass += length(testset.results[1].results)
         catch err
-            if isa(err, Base_TestSetException)
+            if isa(err, Base.Test.TestSetException)
                 combined_tse.pass += err.pass
                 combined_tse.fail += err.fail
                 combined_tse.error += err.error
-                _nbroken!(combined_tse, _nbroken(err))
+                combined_tse.nbroken += err.nbroken
             else
                 throw(err)
             end
@@ -99,7 +74,7 @@ function run_all_tests(basedir::AbstractString = include_base_path())
     end
 
     if (combined_tse.fail == 0) && (combined_tse.error == 0)
-        info("All tests ($(combined_tse.pass) in total) passed ($(_nbroken(combined_tse)) broken).")
+        info("All tests ($(combined_tse.pass) in total) passed ($(combined_tse.broken)) broken).")
     else
         throw(combined_tse)
     end

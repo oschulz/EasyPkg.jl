@@ -101,7 +101,3 @@ end
 
 @testset "Some more tests" ...
 ```
-
-The `@EasyPkg.using_BaseTest` macro allows you to easily use the new Julia
-v0.5 `Base.Test`, it automatically falls back to `BaseTestNext` for Julia
-v0.4.

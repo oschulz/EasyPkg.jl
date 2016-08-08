@@ -1,7 +1,6 @@
 # This file is a part of EasyPkg, licensed under the MIT License (MIT).
 
-import EasyPkg
-@EasyPkg.using_BaseTest
+using Base.Test
 
 @testset "Some tests" begin
 	@test sum([1,2,3]) == 6
