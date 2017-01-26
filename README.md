@@ -61,8 +61,8 @@ use
 
 ```julia
 EasyPkg.include_sources(
-	"foo",
-	"bar.jl",
+    "foo",
+    "bar.jl",
 )
 ```
 
